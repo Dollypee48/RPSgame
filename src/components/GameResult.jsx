@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 
 const GameResult = ({ userChoice, computerChoice, result }) => {
@@ -15,16 +17,18 @@ const GameResult = ({ userChoice, computerChoice, result }) => {
 
   const getEmoji = (choice) => {
     switch (choice) {
-      case "rock":
-        return "🪨";
-      case "paper":
-        return "📄";
-      case "scissors":
-        return "✂️";
-      default:
-        return "❓";
+      case "rock": return "🪨";
+      case "paper": return "📄";
+      case "scissors": return "✂️";
+      default: return "❓";
     }
   };
+
+  useEffect(() => {
+    if (result === "win") toast.success("Nice! You won this round!");
+    else if (result === "lose") toast.error("Oops! You lost this round.");
+    else toast.info("It's a tie. Try again!");
+  }, [result]);
 
   return (
     <motion.div
