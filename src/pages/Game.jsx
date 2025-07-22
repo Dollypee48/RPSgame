@@ -31,47 +31,52 @@ const Game = () => {
   };
 
   const handleChoice = (choice) => {
-    setUserChoice(choice);
     const computer = getComputerChoice();
-    setComputerChoice(computer);
-    
     const gameResult = determineWinner(choice, computer);
+
+    setUserChoice(choice);
+    setComputerChoice(computer);
     setResult(gameResult);
-    
-    setScore(prevScore => ({
-      ...prevScore,
-      user: gameResult === "win" ? prevScore.user + 1 : prevScore.user,
-      computer: gameResult === "lose" ? prevScore.computer + 1 : prevScore.computer,
-      ties: gameResult === "tie" ? prevScore.ties + 1 : prevScore.ties,
-    }));
-    
     setShowResult(true);
+
+    setScore((prev) => ({
+      ...prev,
+      user: gameResult === "win" ? prev.user + 1 : prev.user,
+      computer: gameResult === "lose" ? prev.computer + 1 : prev.computer,
+      ties: gameResult === "tie" ? prev.ties + 1 : prev.ties,
+    }));
   };
 
   const resetGame = () => {
-    setShowResult(false);
     setUserChoice(null);
     setComputerChoice(null);
     setResult(null);
+    setShowResult(false);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-2">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto text-center">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-4xl sm:text-5xl font-bold text-gray-800 mb-2"
+        >
           Game On!
-        </h1>
-        <p className="text-lg text-center text-gray-600 mb-8">
-          Choose rock, paper, or scissors to play against the computer.
+        </motion.h1>
+        <p className="text-lg text-gray-600 mb-10">
+          Choose rock, paper, or scissors to challenge the AI.
         </p>
-        
+
         <ScoreBoard score={score} />
-        
+
         {!showResult ? (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-3 gap-4 justify-items-center mb-8"
+            transition={{ delay: 0.1 }}
+            className="grid grid-cols-1 sm:grid-cols-3 gap-6 justify-items-center mt-10"
           >
             {choices.map((choice) => (
               <ChoiceButton
@@ -84,10 +89,11 @@ const Game = () => {
         ) : (
           <AnimatePresence>
             <motion.div
+              key="result"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="mb-8"
+              className="mt-10"
             >
               <GameResult
                 userChoice={userChoice}
@@ -95,15 +101,16 @@ const Game = () => {
                 result={result}
               />
             </motion.div>
-            
+
             <motion.div
+              key="play-again"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex justify-center"
+              className="mt-8 flex justify-center"
             >
               <button
                 onClick={resetGame}
-                className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-200"
+                className="bg-gray-900 hover:bg-gray-700 text-white font-semibold py-3 px-8 rounded-xl shadow-lg transition duration-300"
               >
                 Play Again
               </button>
